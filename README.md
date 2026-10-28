@@ -1,5 +1,9 @@
 # Homework 3
 
+## Team Members
+- Smith Elie
+- Padma Bellamkonda
+- Christoph Dittrich
 
 ## Provenance
 - **Source URL**: https://files.grouplens.org/datasets/movielens/ml-100k.zip
