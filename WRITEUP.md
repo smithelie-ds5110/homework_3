@@ -7,7 +7,7 @@
 
 For the u.user dataset, the shape is (943, 5) and each row represents a user and the data is tidy. 
 The README leaves out the fact that the zip code should be loaded as a string to preserve leading zeros.
-The README does not specify types.
+The README does not specify types. The README incorrectly states that the data is tab delimited when, in fact, it is pipe delimited.
 
 ### u.item
 
