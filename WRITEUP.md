@@ -32,3 +32,26 @@ This chart suggests that ratings are skewed positively. It may be worth investig
 This chart shows the distribution of MovieLens users across occupations.
 It can answer questions around if any particular group is overrepresented in the data. In this case, students are.
 
+## Step 2 — Describe the Raw Data
+
+### 2(a) - The six-table SQLite schema is documented in the [Database Schema](README.md#database-schema) section of the README.
+
+### 2(b) - The original u.item file represents genres using 19 binary columns, with each column indicating whether a movie belongs to a particular genre.
+I normalized this representation into two tables: genres, which stores the genre IDs and names, and movie_genres, which stores one row per movie–genre association. This allows a movie to belong to multiple genres without requiring a separate column for each genre.
+This design is tidy because each row represents a single movie-genre association. It also avoids hardcoding the 19 genres into the table structure. The composite primary key (movie_id, genre_id) prevents duplicate associations, while foreign keys ensure that each association references an existing movie and genre.
+
+### 2(c) - Constraints and Validation
+The schema uses STRICT tables, primary and foreign keys, NOT NULL, UNIQUE and CHECK constraints to enforce the following:
+- Valid ratings (1–5), positive ages and timestamps, and gender codes (M/F).
+- Nonblank movie titles, ZIP codes and genre names.
+- Unique IDs, genre names, user–movie rating pairs and movie–genre pairs.
+- Valid references between users, occupations, movies, ratings and genres.
+
+**Claims requiring separate validation:**
+- Dataset counts: 943 users, 1,682 movies, and 100,000 ratings (COUNT(*)).
+- At least 20 ratings per user (GROUP BY and HAVING).
+- Complete and accurate loading of source records (compare source and database counts).
+
+### 2(d) - I chose TEXT for zip because ZIP codes are identifiers rather than numerical values.
+Storing them as numerical values may lead to leading zeros getting dropped. Using TEXT
+preserves the source data as it existed in the raw data files.
