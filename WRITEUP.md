@@ -55,3 +55,33 @@ The schema uses STRICT tables, primary and foreign keys, NOT NULL, UNIQUE and CH
 ### 2(d) - I chose TEXT for zip because ZIP codes are identifiers rather than numerical values.
 Storing them as numerical values may lead to leading zeros getting dropped. Using TEXT
 preserves the source data as it existed in the raw data files.
+
+
+## Step 3 — Load the data and keep what is refused
+
+### 3a. Predictions (written before running `make`)
+
+| Table | Expected rows | Source of the expectation |
+|---|---|---|
+| occupations | 21 | the 21 values listed in the README (`u.occupation`) |
+| genres | 19 | the 19 genres in `u.genre` |
+| users | 943 | README: 943 users |
+| movies | 1,682 | README: 1,682 movies |
+| movie_genres | not known in advance | one row per genre flag set to 1, so at least 1,682 if every movie has a genre |
+| ratings | 100,000 | README: 100,000 ratings |
+
+**Expected refusals:** none.
+
+### 3e. Actual row counts vs. predictions
+
+| Table | Predicted | Actual | Difference |
+|---|---|---|---|
+| occupations | 21 | 21 | none |
+| genres | 19 | 19 | none |
+| users | 943 | 943 | none |
+| movies | 1,682 | 1,682 | none |
+| movie_genres | unknown | 2,893 | not predictable in advance; higher than 1,682 because many movies belong to more than one genre |
+| ratings | 100,000 | 100,000 | none |
+| Rejected rows | 0 | 0 | none |
+
+Every count matched the prediction, and no rows were refused.
