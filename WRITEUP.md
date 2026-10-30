@@ -84,4 +84,4 @@ preserves the source data as it existed in the raw data files.
 | ratings | 100,000 | 100,000 | none |
 | Rejected rows | 0 | 0 | none |
 
-Every count matched the prediction, and no rows were refused.
+Every count matched the prediction and none of the rows were refused. However, there is one date `4-Feb-1971` with no leading zero. `load.py` converts every date to the ISO format (`1995-01-01`) so dates sort and are compared correctly in SQL.
