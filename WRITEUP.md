@@ -109,6 +109,25 @@ The README makes three claims about the dataset as a whole. A constraint on a si
 All three predictions were correct, so there was no gap to explain.
 
 
+
+
+## Step 6 — Build a query from named steps
+
+**6a. Steps and row counts**
+
+| Step | What it does | Rows |
+|---|---|---|
+| movie_stats | mean and count of ratings per movie, movies with 30+ ratings are kept | 806 |
+| genre_stats | mean of all ratings given to movies in each genre | 19 |
+| movie_vs_genre | each of those movies joined to each of its genres | 1,610 |
+| winners (final) | pairs where the mean of the movie is at least 0.5 above the mean of its genre | 147 |
+
+**6b. Several genres per movie.** We decided to compare each movie with each of its genres. This ultimately means that a movie can appear once per genre where its average rating is at least 0.5 above the aberage of that genre. Picking only one genre wouldn't really make sense in my opinion, because the data has no "main" genre and we would susbequently throw away information. 
+
+**6c. Nested subquery.** `step6_nested.sql` gives us the same 147 rows as the CTE version. I would rather debug the CTE version because I can run and check each named sep individually, while the in the nested version we have to start on the inside and work our way outwards.
+
+
+
 ## Step 7 — Missing Values in SQL and in pandas
 
 ### 7a.
@@ -161,3 +180,8 @@ The counts do not differ:
 - Means: educator 3.671, administrator 3.636, programmer 3.568, librarian 3.561, other 3.552, engineer 3.541, student 3.515.
 - I counted raters with `nunique`. Counting rows would count ratings instead.
 - I merged with `validate="m:1"`, so a duplicated key raises an error instead of silently changing the row count.
+
+
+## Step 8 — Where SQL earns its place
+
+The Step 6 query would have been the most awkward in pandas. The genres are present in a separate table, which means that Pandas would need several merges and `groupby`s. Additionally, each merge can accidentally duplicate rows which is not ideal. In SQL, on the other hand, the joins and grouping follow a clear sequence of named steps. This makes our life a lot easier in the sense that we can count the rows after each step to ensure that the join between movies and genres is correct.
