@@ -108,6 +108,16 @@ The README makes three claims about the dataset as a whole. A constraint on a si
 
 All three predictions were correct, so there was no gap to explain.
 
+## Step 5 — Answer questions in SQL
+
+**Q1 - Ten movies with the most ratings**
+
+Predicted rows: 10
+
+Actual rows: 10
+
+The query returned exactly 10 movies, matching the prediction. Star Wars (1977) received the most ratings with 583. I used COUNT(*) to count ratings per movie and sorted the results in descending order. Ties are resolved using movie_id ASC, ensuring deterministic results. There was no difference between the predicted and actual row counts.
+
 
 
 
