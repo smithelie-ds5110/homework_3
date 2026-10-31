@@ -107,3 +107,57 @@ The README makes three claims about the dataset as a whole. A constraint on a si
 **Claim 3: every user has rated at least 20 movies.** The fewest ratings by any user is 20 and no user is below 20, so the claim is confirmed. The minimum is exactly 20 which matches the README.
 
 All three predictions were correct, so there was no gap to explain.
+
+
+## Step 7 — Missing Values in SQL and in pandas
+
+### 7a.
+
+Only the `movies` table has NULLs, in three columns:
+
+- `release_date`: 1 NULL (movie 267, "unknown"). The release date is not known.
+- `video_release_date`: 1,682 NULLs, every movie. A video release date was never recorded.
+- `imdb_url`: 3 NULLs (movies 267, 1358, 1359). No URL was given in the file.
+
+In each column NULL means unknown or not recorded, not zero or empty. No other column has NULLs.
+
+### 7b. 
+
+`step7_b1.sql` lists movies whose release date differs from every unknown-genre movie's release date.
+
+- The subquery returns two values: 4-Feb-1971 and NULL.
+- `x NOT IN (a, NULL)` means `x <> a AND x <> NULL`.
+- Comparing to NULL gives UNKNOWN. This means the condition is never true
+- Result: 0 rows , no errors
+
+`step7_b2.sql` asks the same question with `NOT EXISTS`. It checks each movie for a matching row and never compares to NULL.
+- Result: 1,681 rows, every movie except "Good Morning (1971)". This means that the date matches itself.
+
+A NULL in the subquery breaks `NOT IN` but not `NOT EXISTS`.
+
+The difference:
+x NOT IN (a, NULL) means x <> a AND x <> NULL, and x <> NULL is UNKNOWN, so no row is ever TRUE. NOT EXISTS only checks whether a matching row exists and ignores NULL.
+
+### 7c. 
+
+I read `movies`, the only table with NULLs.
+
+- `movie_id` is `int64`.
+- `title`, `release_date` and `imdb_url` are `str`.
+- `video_release_date` is `object`
+
+Every value is missing, so pandas has nothing to infer a type from. Missing counts match SQLite
+- `release_date` 1, `video_release_date` 1,682, - - `imdb_url` 3
+- NULL in SQLite becomes NaN in pandas.
+
+ No integer column had a NULL, so no numnber became float.
+
+### 7d.
+
+I redid Q2, the mean rating/occupation with at least 50 raters. 
+
+The counts do not differ:
+- The pandas result has the same 7 rows, counts and means as the SQL query, so there was no difference to investigate.
+- Means: educator 3.671, administrator 3.636, programmer 3.568, librarian 3.561, other 3.552, engineer 3.541, student 3.515.
+- I counted raters with `nunique`. Counting rows would count ratings instead.
+- I merged with `validate="m:1"`, so a duplicated key raises an error instead of silently changing the row count.
