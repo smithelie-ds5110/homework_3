@@ -118,7 +118,18 @@ Actual rows: 10
 
 The query returned exactly 10 movies, matching the prediction. Star Wars (1977) received the most ratings with 583. I used COUNT(*) to count ratings per movie and sorted the results in descending order. Ties are resolved using movie_id ASC, ensuring deterministic results. There was no difference between the predicted and actual row counts.
 
+**Q2 — Mean rating by occupation**
 
+Predicted rows: 7
+
+Actual rows: 7
+
+The query returned seven occupations with at least 50 distinct raters, matching the prediction. 
+Educators had the highest mean rating at 3.671, while students had the lowest among the qualifying occupations at 3.515. 
+I used COUNT(DISTINCT user_id) to count unique raters rather than individual ratings. 
+The minimum rater condition belongs in HAVING because it filters aggregated groups. 
+WHERE would be used to filter individual records before grouping but no such filtering was needed here. 
+There was no difference between the predicted and actual row counts.
 
 
 ## Step 6 — Build a query from named steps
