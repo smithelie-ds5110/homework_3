@@ -85,3 +85,8 @@ preserves the source data as it existed in the raw data files.
 | Rejected rows | 0 | 0 | none |
 
 Every count matched the prediction and none of the rows were refused. However, there is one date `4-Feb-1971` with no leading zero. `load.py` converts every date to the ISO format (`1995-01-01`) so dates sort and are compared correctly in SQL.
+
+**Q4.** 
+I predicted 19 rows, one for each genre, and the query returned 19 rows. I joined `ratings` to `movie_genres` and `genres` and grouped by genre. Drama has the most ratings and the unknown genre has the fewest. The mean rating ranges from 3.215 for Fantasy to 3.922 for Film-Noir. The unknown genre's mean of 3.2 rests on only 10 ratings, so I would not trust it.
+
+The counts add up to 212,595, which is 112,595 more than the 100,000 ratings in the data. A movie can belong to several genres, so the join repeats each of its ratings once for every genre. A rating of a movie that is both Comedy and Romance is counted in both rows. On average each rating is counted about 2.1 times. The per-genre counts are therefore not a split of the ratings into separate groups and should not be added together. The mean ratings are affected in the same way, because a movie with several genres contributes to each genre's average.
