@@ -86,7 +86,24 @@ preserves the source data as it existed in the raw data files.
 
 Every count matched the prediction and none of the rows were refused. However, there is one date `4-Feb-1971` with no leading zero. `load.py` converts every date to the ISO format (`1995-01-01`) so dates sort and are compared correctly in SQL.
 
-**Q4.** 
-I predicted 19 rows, one for each genre, and the query returned 19 rows. I joined `ratings` to `movie_genres` and `genres` and grouped by genre. Drama has the most ratings and the unknown genre has the fewest. The mean rating ranges from 3.215 for Fantasy to 3.922 for Film-Noir. The unknown genre's mean of 3.2 rests on only 10 ratings, so I would not trust it.
+## Step 4 
 
-The counts add up to 212,595, which is 112,595 more than the 100,000 ratings in the data. A movie can belong to several genres, so the join repeats each of its ratings once for every genre. A rating of a movie that is both Comedy and Romance is counted in both rows. On average each rating is counted about 2.1 times. The per-genre counts are therefore not a split of the ratings into separate groups and should not be added together. The mean ratings are affected in the same way, because a movie with several genres contributes to each genre's average.
+The README makes three claims about the dataset as a whole. A constraint on a single row or column cannot enforce them, so I wrote one query for each and ran it against the loaded database. The queries are saved in `sql/queries/` as `step4_1_totals.sql`, `step4_2_consecutive_ids.sql` and `step4_3_min_20_ratings.sql`, each with its predicted row count, actual row count and gap.
+
+### Predictions
+
+**Claim 1:** I predict one row showing 100,000 ratings, 943 users and 1,682 movies, because these are the numbers the README gives and our Step 3 load already produced exactly those row counts.
+
+**Claim 2:** I predict two rows, one for users and one for movies, with a smallest id of 1 and a largest id equal to the row count, because ids are unique, so ids that start at 1 and end at the row count leave no room for a gap.
+
+**Claim 3:** I predict one row with a smallest per-user rating count of at least 20 and no user below 20, because the README states that every user has rated at least 20 movies and our load lost no users or ratings.
+
+### Results
+
+**Claim 1: 100,000 ratings, 943 users, 1,682 movies.** The query returned exactly these numbers, so the claim is confirmed. They also match the Step 3 load counts.
+
+**Claim 2: ids are consecutive from 1.** Ids are unique, so they are consecutive exactly when the smallest id is 1 and the largest equals the row count. Users run from 1 to 943 with 943 rows, and movies from 1 to 1,682 with 1,682 rows, so the claim is confirmed. The count alone would miss a gap such as ids 1, 2, 4.
+
+**Claim 3: every user has rated at least 20 movies.** The fewest ratings by any user is 20 and no user is below 20, so the claim is confirmed. The minimum is exactly 20 which matches the README.
+
+All three predictions were correct, so there was no gap to explain.
