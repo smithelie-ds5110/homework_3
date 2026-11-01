@@ -270,4 +270,13 @@ The counts do not differ:
 
 ## Step 8 — Where SQL earns its place
 
+**Step 5 Query**
+
+I found Question 6 from Step 5, involving set subtraction, to be the most awkward to implement in pandas. The question required identifying movies rated by at least one student but by no programmer.
+SQL made this straightforward using the EXCEPT operator. I could retrieve the movie IDs rated by students and subtract those rated by programmers directly. In pandas, I would need to filter the data by occupation, extract the unique movie IDs for each group, and perform set subtraction separately.
+SQL expresses the logic more clearly and concisely, while EXCEPT automatically removes duplicates.
+
+**Step 6 Query**
+
 The Step 6 query would have been the most awkward in pandas. The genres are present in a separate table, which means that Pandas would need several merges and `groupby`s. Additionally, each merge can accidentally duplicate rows which is not ideal. In SQL, on the other hand, the joins and grouping follow a clear sequence of named steps. This makes our life a lot easier in the sense that we can count the rows after each step to ensure that the join between movies and genres is correct.
+
