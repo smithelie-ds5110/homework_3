@@ -39,10 +39,10 @@ def insert(con, table, row, source, n):
 
 DB_PATH.parent.mkdir(exist_ok=True)
 REJECTED_PATH.parent.mkdir(exist_ok=True)
-DB_PATH.unlink(missing_ok=True)                     # rebuild from scratch
+DB_PATH.unlink(missing_ok=True)                  
 
 con = sqlite3.connect(DB_PATH)
-con.execute("PRAGMA foreign_keys = ON")               # off by default in SQLite
+con.execute("PRAGMA foreign_keys = ON")             
 con.executescript((ROOT / "sql" / "schema.sql").read_text())
 
 for n, f in lines("u.occupation", "|"):
@@ -56,7 +56,7 @@ for n, f in lines("u.user", "|"):
 
 for n, f in lines("u.item", "|", "latin-1"):
     insert(con, "movies", (int(f[0]), f[1], iso(f[2]), iso(f[3]), f[4] or None), "u.item", n)
-    for genre_id, flag in enumerate(f[5:]):      # 19 flags -> one row per flag of 1
+    for genre_id, flag in enumerate(f[5:]):    
         if flag == "1":
             insert(con, "movie_genres", (int(f[0]), genre_id), "u.item", n)
 
