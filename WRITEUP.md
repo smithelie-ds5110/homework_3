@@ -144,6 +144,17 @@ The predicted and actual row counts matched because the aggregate query returns 
 Storing ZIP codes as TEXT preserves nonnumeric characters and leading zeros. If ZIP codes had been stored as INTEGER, these values could not have been represented. 
 In a STRICT SQLite table, nonnumeric ZIP codes would be rejected rather than preserved, so the original count of 18 would have disappeared.
 
+**Q4 — Ratings by Genre**
+
+Predicted rows: 19  
+Actual rows: 19  
+Gap: None.
+
+The query returned all 19 genres, matching the prediction. Drama had the most ratings (39,895), while Film-Noir had the highest mean rating (3.922).
+The sum of ratings across all genres was 212,595, compared with the 100,000 individual ratings in the MovieLens dataset. 
+The difference of 112,595 occurs because movies can belong to multiple genres, so each individual rating contributes to the count of every genre associated with that movie.
+This is an expected result of the many-to-many relationship between movies and genres, not duplicate ratings or a data-quality issue.
+
 ## Step 6 — Build a query from named steps
 
 **6a. Steps and row counts**
