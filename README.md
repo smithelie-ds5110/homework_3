@@ -12,15 +12,28 @@
 
 ## Setup
 
+## Setup
+
 Install dependencies:
-```
+
+```bash
 pip install -r requirements.txt
 ```
 
-Download and extract the dataset:
+Run the complete pipeline:
+
+```bash
+make
 ```
-python src/download.py
-```
+
+This downloads and extracts the MovieLens 100K dataset, rebuilds
+the SQLite database, and generates the query results.
+
+Generated files:
+- `data/movielens.db` — SQLite database
+- `output/rejected.csv` — rejected records and SQLite errors
+- `output/queries/` — SQL query results
+- `figures/` — exploratory charts
 
 
 ## Database Schema
