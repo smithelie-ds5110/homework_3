@@ -155,6 +155,36 @@ The sum of ratings across all genres was 212,595, compared with the 100,000 indi
 The difference of 112,595 occurs because movies can belong to multiple genres, so each individual rating contributes to the count of every genre associated with that movie.
 This is an expected result of the many-to-many relationship between movies and genres, not duplicate ratings or a data-quality issue.
 
+**Q5 — Ratings per Calendar Month**
+
+Predicted rows: 12  
+
+Actual rows: 8
+
+Gap: 4.
+
+I predicted 12 rows, assuming the dataset spanned one year. 
+However, the query returned eight calendar months, spanning September 1997 through April 1998. November 1997 had the most ratings (23,980).
+The difference occurred because the dataset covers eight calendar months rather than the full year I initially expected. 
+I used SQLite's `strftime()` with the `unixepoch` argument to convert Unix timestamps into year-month values before grouping. 
+The monthly counts sum to exactly 100,000, confirming that all ratings were accounted for.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Step 6 — Build a query from named steps
 
 **6a. Steps and row counts**
