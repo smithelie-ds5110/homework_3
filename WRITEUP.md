@@ -108,6 +108,92 @@ The README makes three claims about the dataset as a whole. A constraint on a si
 
 All three predictions were correct, so there was no gap to explain.
 
+## Step 5 — Answer questions in SQL
+
+**Q1 - Ten movies with the most ratings**
+
+Predicted rows: 10
+
+Actual rows: 10
+
+The query returned exactly 10 movies, matching the prediction. Star Wars (1977) received the most ratings with 583. I used COUNT(*) to count ratings per movie and sorted the results in descending order. Ties are resolved using movie_id ASC, ensuring deterministic results. There was no difference between the predicted and actual row counts.
+
+**Q2 — Mean rating by occupation**
+
+Predicted rows: 7
+
+Actual rows: 7
+
+The query returned seven occupations with at least 50 distinct raters, matching the prediction. 
+Educators had the highest mean rating at 3.671, while students had the lowest among the qualifying occupations at 3.515. 
+I used COUNT(DISTINCT user_id) to count unique raters rather than individual ratings. 
+The minimum rater condition belongs in HAVING because it filters aggregated groups. 
+WHERE would be used to filter individual records before grouping but no such filtering was needed here. 
+There was no difference between the predicted and actual row counts.
+
+**Q3 — ZIP codes that do not begin with a digit**
+
+Predicted rows: 1  
+
+Actual rows: 1  
+
+Users identified: 18
+
+The query identified 18 users whose ZIP codes do not begin with a digit. 
+The predicted and actual row counts matched because the aggregate query returns one row. 
+Storing ZIP codes as TEXT preserves nonnumeric characters and leading zeros. If ZIP codes had been stored as INTEGER, these values could not have been represented. 
+In a STRICT SQLite table, nonnumeric ZIP codes would be rejected rather than preserved, so the original count of 18 would have disappeared.
+
+**Q4 — Ratings by Genre**
+
+Predicted rows: 19  
+Actual rows: 19  
+Gap: None.
+
+The query returned all 19 genres, matching the prediction. Drama had the most ratings (39,895), while Film-Noir had the highest mean rating (3.922).
+The sum of ratings across all genres was 212,595, compared with the 100,000 individual ratings in the MovieLens dataset. 
+The difference of 112,595 occurs because movies can belong to multiple genres, so each individual rating contributes to the count of every genre associated with that movie.
+This is an expected result of the many-to-many relationship between movies and genres, not duplicate ratings or a data-quality issue.
+
+**Q5 — Ratings per Calendar Month**
+
+Predicted rows: 12  
+
+Actual rows: 8
+
+Gap: 4.
+
+I predicted 12 rows, assuming the dataset spanned one year. 
+However, the query returned eight calendar months, spanning September 1997 through April 1998. November 1997 had the most ratings (23,980).
+The difference occurred because the dataset covers eight calendar months rather than the full year I initially expected. 
+I used SQLite's `strftime()` with the `unixepoch` argument to convert Unix timestamps into year-month values before grouping. 
+The monthly counts sum to exactly 100,000, confirming that all ratings were accounted for.
+
+**Q6 — Movies Rated by Students but Not Programmers**
+
+Predicted rows: 1  
+
+Actual rows: 1  
+
+Qualifying movies: 268
+
+The query identified 268 distinct movies rated by at least one student but by no programmer. 
+The predicted and actual row counts matched because `COUNT(*)` returns a single aggregate row.
+I used `EXCEPT` because the question requires set subtraction: movies rated by students minus movies rated by programmers. 
+`UNION` would combine both sets, while `INTERSECT` would return movies rated by both groups. 
+`EXCEPT` also removes duplicate movie IDs, ensuring each movie is counted only once.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -184,4 +270,13 @@ The counts do not differ:
 
 ## Step 8 — Where SQL earns its place
 
+**Step 5 Query**
+
+I found Question 6 from Step 5, involving set subtraction, to be the most awkward to implement in pandas. The question required identifying movies rated by at least one student but by no programmer.
+SQL made this straightforward using the EXCEPT operator. I could retrieve the movie IDs rated by students and subtract those rated by programmers directly. In pandas, I would need to filter the data by occupation, extract the unique movie IDs for each group, and perform set subtraction separately.
+SQL expresses the logic more clearly and concisely, while EXCEPT automatically removes duplicates.
+
+**Step 6 Query**
+
 The Step 6 query would have been the most awkward in pandas. The genres are present in a separate table, which means that Pandas would need several merges and `groupby`s. Additionally, each merge can accidentally duplicate rows which is not ideal. In SQL, on the other hand, the joins and grouping follow a clear sequence of named steps. This makes our life a lot easier in the sense that we can count the rows after each step to ensure that the join between movies and genres is correct.
+
