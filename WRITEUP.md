@@ -131,6 +131,18 @@ The minimum rater condition belongs in HAVING because it filters aggregated grou
 WHERE would be used to filter individual records before grouping but no such filtering was needed here. 
 There was no difference between the predicted and actual row counts.
 
+**Q3 — ZIP codes that do not begin with a digit**
+
+Predicted rows: 1  
+
+Actual rows: 1  
+
+Users identified: 18
+
+The query identified 18 users whose ZIP codes do not begin with a digit. 
+The predicted and actual row counts matched because the aggregate query returns one row. 
+Storing ZIP codes as TEXT preserves nonnumeric characters and leading zeros. If ZIP codes had been stored as INTEGER, these values could not have been represented. 
+In a STRICT SQLite table, nonnumeric ZIP codes would be rejected rather than preserved, so the original count of 18 would have disappeared.
 
 ## Step 6 — Build a query from named steps
 
