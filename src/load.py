@@ -26,6 +26,7 @@ def lines(name, sep, encoding="utf-8"):
 
 
 def iso(text):
+    # Convert the date format
     return datetime.strptime(text, "%d-%b-%Y").strftime("%Y-%m-%d") if text else None
 
 
@@ -39,37 +40,45 @@ def insert(con, table, row, source, n):
 
 DB_PATH.parent.mkdir(exist_ok=True)
 REJECTED_PATH.parent.mkdir(exist_ok=True)
+
+# Rebuild from scratch
 DB_PATH.unlink(missing_ok=True)                  
 
 con = sqlite3.connect(DB_PATH)
 con.execute("PRAGMA foreign_keys = ON")             
 con.executescript((ROOT / "sql" / "schema.sql").read_text())
 
+# Load the lookup tables
 for n, f in lines("u.occupation", "|"):
     insert(con, "occupations", (f[0],), "u.occupation", n)
 
 for n, f in lines("u.genre", "|"):
     insert(con, "genres", (int(f[1]), f[0]), "u.genre", n)
 
+# Load the users
 for n, f in lines("u.user", "|"):
     insert(con, "users", (int(f[0]), int(f[1]), f[2], f[3], f[4]), "u.user", n)
 
+# Load the movies and genres
 for n, f in lines("u.item", "|", "latin-1"):
     insert(con, "movies", (int(f[0]), f[1], iso(f[2]), iso(f[3]), f[4] or None), "u.item", n)
     for genre_id, flag in enumerate(f[5:]):    
         if flag == "1":
             insert(con, "movie_genres", (int(f[0]), genre_id), "u.item", n)
 
+# Load the ratings
 for n, f in lines("u.data", "\t"):
     insert(con, "ratings", tuple(map(int, f)), "u.data", n)
 
 con.commit()
 
+# Save the refused rows
 with open(REJECTED_PATH, "w", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
     writer.writerow(["table", "source_file", "line", "row", "error"])
     writer.writerows(rejected)
 
+# Print the summary
 for table in TABLES:
     loaded = con.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
     bad = sum(r[0] == table for r in rejected)
