@@ -169,7 +169,19 @@ The difference occurred because the dataset covers eight calendar months rather 
 I used SQLite's `strftime()` with the `unixepoch` argument to convert Unix timestamps into year-month values before grouping. 
 The monthly counts sum to exactly 100,000, confirming that all ratings were accounted for.
 
+**Q6 — Movies Rated by Students but Not Programmers**
 
+Predicted rows: 1  
+
+Actual rows: 1  
+
+Qualifying movies: 268
+
+The query identified 268 distinct movies rated by at least one student but by no programmer. 
+The predicted and actual row counts matched because `COUNT(*)` returns a single aggregate row.
+I used `EXCEPT` because the question requires set subtraction: movies rated by students minus movies rated by programmers. 
+`UNION` would combine both sets, while `INTERSECT` would return movies rated by both groups. 
+`EXCEPT` also removes duplicate movie IDs, ensuring each movie is counted only once.
 
 
 
