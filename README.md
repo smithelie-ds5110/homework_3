@@ -12,8 +12,6 @@
 
 ## Setup
 
-## Setup
-
 Install dependencies:
 
 ```bash
@@ -86,3 +84,15 @@ erDiagram
     }
 ```
 
+
+## Contributions
+
+- **Smith:** Completed Steps 0, 1, 2 (with contributions from everyone), and Step 5. Extended the Step 3 Makefile to automatically execute all SQL queries and save their results.
+- **Smith and Chris:** Step 8 (Split up)
+- **Chris and Padma:** Worked on Step 3.
+- **Padma:** Completed Steps 4 and 7.
+- **Chris:** Completed Step 6 and contributed to Step 8.
+- **Everyone:** Contributed to Step 2, Step 3 and the write-up.
+
+## AI-Note
+We used AI as a supporting tool to validate SQL query syntax and assist with debugging and troubleshooting. All final code, queries and results were reviewed and tested by the team.

@@ -88,7 +88,7 @@ Every count matched the prediction and none of the rows were refused. However, t
 
 ## Step 4 
 
-The README makes three claims about the dataset as a whole. A constraint on a single row or column cannot enforce them, so I wrote one query for each and ran it against the loaded database. The queries are saved in `sql/queries/` as `step4_1_totals.sql`, `step4_2_consecutive_ids.sql` and `step4_3_min_20_ratings.sql`, each with its predicted row count, actual row count and gap.
+The README makes three claims about the dataset as a whole. A constraint on a single row or column cannot enforce them, so I wrote one query for each and ran it against the loaded database. The queries are saved in `sql/queries/` as `step4_1.sql`, `step4_2.sql` and `step4_3.sql`, each with its predicted row count, actual row count and gap.
 
 ### Predictions
 
